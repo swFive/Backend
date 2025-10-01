@@ -1,47 +1,54 @@
 package com.example.medicineReminder.service;
 
+// CustomOAuth2UserService.java
+
+import com.example.medicineReminder.domain.User;
+import com.example.medicineReminder.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
-
 import java.util.Map;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor // final 필드에 대한 생성자를 자동으로 생성
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+
+    private final UserRepository userRepository; // UserRepository를 주입받음
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
-        OAuth2AccessToken accessToken = userRequest.getAccessToken();
-
-        System.out.println("==============================================");
-        System.out.println("✅ 카카오 액세스 토큰 값: " + accessToken.getTokenValue());
-        System.out.println("✅ 토큰 만료 시간: " + accessToken.getExpiresAt());
-        System.out.println("==============================================");
-        /*
-
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        // 카카오로부터 받은 사용자 정보
+        // 1. 카카오로부터 사용자 정보 가져오기
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+        Long kakaoId = (Long) attributes.get("id");
+        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+        String nickname = (String) properties.get("nickname");
 
-        String email = (String) kakaoAccount.get("email");
-        String nickname = (String) profile.get("nickname");
+        // 2. 제공받은 정보로 서비스 회원 여부 확인 (DB 조회)
+        Optional<User> optionalUser = userRepository.findByKakaoId(kakaoId);
 
-        System.out.println("카카오 사용자 정보: " + attributes);
-        System.out.println("이메일: " + email);
-        System.out.println("닉네임: " + nickname);
+        User user;
+        if (optionalUser.isPresent()) {
+            // 이미 가입된 경우: 기존 사용자 정보를 가져옴
+            user = optionalUser.get();
+            System.out.println("✅ 기존 회원입니다: " + user.getNickname());
+        } else {
+            // 신규 사용자인 경우: 회원 가입 처리
+            user = User.builder()
+                    .kakaoId(kakaoId)
+                    .nickname(nickname)
+                    .build();
+            userRepository.save(user);
+            System.out.println("✅ 신규 회원 자동 가입: " + user.getNickname());
+        }
 
-        // 여기서 DB에 사용자 정보 저장 또는 업데이트 로직을 구현합니다.
-        // 예를 들어, 이메일을 기반으로 사용자가 이미 존재하는지 확인하고,
-        // 존재하지 않으면 새로 회원가입 처리, 존재하면 정보를 업데이트 할 수 있습니다.*/
-
-        return super.loadUser(userRequest);
+        // Spring Security가 인증을 처리할 수 있도록 OAuth2User 객체를 반환
+        // (세부 구현에 따라 User 정보를 담은 커스텀 객체를 반환하는 것이 일반적)
+        return oAuth2User;
     }
 }
