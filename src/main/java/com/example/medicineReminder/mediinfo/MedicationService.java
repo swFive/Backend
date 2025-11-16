@@ -2,8 +2,6 @@ package com.example.medicineReminder.mediinfo;
 
 import com.example.medicineReminder.medication_log.MedicationIntakeLog;
 import com.example.medicineReminder.medication_log.MedicationLogRepository;
-import com.example.medicineReminder.mediinfo.AppUser;
-import com.example.medicineReminder.mediinfo.AppUserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek; // (nextIntakeTime 계산용)
@@ -16,12 +14,12 @@ import java.util.*; // (nextIntakeTime 계산용)
 import java.util.stream.Collectors;
 
 @Service
-public class service {
+public class MedicationService {
     private final UserMedicationRepository repo;
     private final MedicationLogRepository logRepo;
     private final AppUserRepository userRepo;
 
-    public service(UserMedicationRepository repo, MedicationLogRepository logRepo, AppUserRepository userRepo) {
+    public MedicationService(UserMedicationRepository repo, MedicationLogRepository logRepo, AppUserRepository userRepo) {
         this.repo = repo;
         this.logRepo = logRepo;
         this.userRepo = userRepo;
@@ -42,27 +40,27 @@ public class service {
 
     // 1. 약 저장(save) 메서드
     @Transactional
-    public UserMedication save(dto dto) {
+    public UserMedication save(MedicationDto MedicationDto) {
         AppUser currentUser = getCurrentUser();
 
         UserMedication medication = new UserMedication();
         medication.setUser(currentUser);
 
-        medication.setCategory(dto.getCategory());
-        medication.setName(dto.getName());
+        medication.setCategory(MedicationDto.getCategory());
+        medication.setName(MedicationDto.getName());
 
         // (DB 스키마에 frequency가 없으므로 주석 처리)
         // medication.setFrequency(dto.getFrequency());
-        medication.setMemo(dto.getMemo()); // (DB에 memo는 있음)
+        medication.setMemo(MedicationDto.getMemo()); // (DB에 memo는 있음)
 
-        medication.setInitialQuantity(dto.getInitialQuantity());
-        medication.setCurrentQuantity(dto.getInitialQuantity());
-        medication.setDoseUnitQuantity(dto.getDoseUnitQuantity());
+        medication.setInitialQuantity(MedicationDto.getInitialQuantity());
+        medication.setCurrentQuantity(MedicationDto.getInitialQuantity());
+        medication.setDoseUnitQuantity(MedicationDto.getDoseUnitQuantity());
 
         List<IntakeSchedule> schedules = new ArrayList<>();
-        LocalDate startDate = LocalDate.parse(dto.getStartDate());
-        LocalDate endDate = LocalDate.parse(dto.getEndDate());
-        String[] timesArray = dto.getTimes().split(",");
+        LocalDate startDate = LocalDate.parse(MedicationDto.getStartDate());
+        LocalDate endDate = LocalDate.parse(MedicationDto.getEndDate());
+        String[] timesArray = MedicationDto.getTimes().split(",");
 
         for (String timeStr : timesArray) {
             if (timeStr != null && !timeStr.trim().isEmpty()) {
@@ -70,7 +68,7 @@ public class service {
                 schedule.setMedication(medication);
                 schedule.setUser(currentUser);
                 schedule.setIntakeTime(LocalTime.parse(timeStr.trim()));
-                schedule.setFrequency(dto.getDays());
+                schedule.setFrequency(MedicationDto.getDays());
                 schedule.setStartDate(startDate);
                 schedule.setEndDate(endDate);
 

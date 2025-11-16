@@ -7,25 +7,25 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/medicines")
 public class controller {
-    private final service service;
+    private final MedicationService MedicationService;
 
-    public controller(service service) {
-        this.service = service;
+    public controller(MedicationService MedicationService) {
+        this.MedicationService = MedicationService;
     }
 
     @PostMapping
-    public UserMedication create(@Valid @RequestBody dto dto) {
-        return service.save(dto);
+    public UserMedication create(@Valid @RequestBody MedicationDto MedicationDto) {
+        return MedicationService.save(MedicationDto);
     }
 
     @GetMapping
     public List<MedicationWithLogsDto> getAll() {
-        return service.findAllWithLogs();
+        return MedicationService.findAllWithLogs();
     }
 
     @GetMapping("/{id}")
     public UserMedication getOne(@PathVariable Long id) {
-        return service.findById(id);
+        return MedicationService.findById(id);
     }
 
     // === [핵심 수정] 약 기본 정보 업데이트 API 추가 ===
@@ -33,12 +33,12 @@ public class controller {
     public UserMedication updateMedication(
             @PathVariable Long id,
             @Valid @RequestBody MedicationUpdateDto updateDto) {
-        return service.updateMedication(id, updateDto);
+        return MedicationService.updateMedication(id, updateDto);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        service.delete(id);
+        MedicationService.delete(id);
     }
 
     // (기능을 사용하지 않기로 했으므로 주석 처리 또는 삭제)
@@ -53,6 +53,6 @@ public class controller {
     public IntakeSchedule addSchedule(
             @PathVariable Long medicationId,
             @Valid @RequestBody IntakeScheduleDto dto) {
-        return service.addSchedule(medicationId, dto);
+        return MedicationService.addSchedule(medicationId, dto);
     }
 }

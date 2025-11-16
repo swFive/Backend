@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Schema(description = "약 정보 등록/수정 요청 DTO")
 @Data
-public class dto {
+public class MedicationDto {
     @Schema(description = "카테고리 (예: 영양제, 처방약)", example = "영양제")
     @NotBlank(message = "카테고리는 필수 입력 값입니다.")
     private String category;
@@ -18,13 +18,6 @@ public class dto {
     @NotBlank(message = "이름은 필수 입력 값입니다.")
     private String name;
 
-    // === [핵심 수정] ===
-    // DB에 컬럼이 없으므로 DTO에서도 'frequency' 필드를 제거합니다.
-    /*
-    @Schema(description = "복용량", example = "1일 1회 1정")
-    @NotBlank(message = "복용량은 필수 입력 값입니다.")
-    private String frequency;
-    */
 
     @Schema(description = "메모", example = "식후 즉시 복용")
     private String memo; // (DB에 memo 컬럼은 존재하므로 남겨둡니다)
