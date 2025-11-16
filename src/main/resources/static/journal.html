@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>내 복용 일지</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 20px; background-color: #f8f9fa; }
+        .container { max-width: 800px; margin: auto; }
+        h1 { text-align: center; }
+        .journal-entry {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .journal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .journal-time { font-size: 1.2em; font-weight: 600; color: #333; }
+        .journal-emoji { font-size: 2em; }
+        .journal-memo {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .journal-logs-list { list-style-type: none; padding-left: 0; }
+        .log-detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        .log-detail-item:last-child { border-bottom: none; }
+        .log-status { font-weight: bold; }
+        .status-TAKEN { color: #28a745; }
+        .status-SKIPPED { color: #ffc107; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📄 내 복용 일지</h1>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <button onclick="location.href='/log_test.html'">+ 새 기록/일지 작성하기</button>
+        <button onclick="fetchJournals()">🔄 새로고침</button>
+    </div>
+
+    <div id="journal-list-container">
+    </div>
+</div>
+
+<script>
+    const journalListContainer = document.getElementById('journal-list-container');
+
+    window.onload = function() {
+        fetchJournals();
+    };
+
+    async function fetchJournals() {
+        journalListContainer.innerHTML = '<p>일지를 불러오는 중...</p>';
+        try {
+            // 1. [신규 API] /api/journals 호출
+            const response = await fetch('/api/journals');
+            if (!response.ok) throw new Error('일지 목록을 불러오는데 실패했습니다.');
+
+            const journals = await response.json(); // List<JournalViewDto>
+
+            if (journals.length === 0) {
+                journalListContainer.innerHTML = '<p>작성된 일지가 없습니다.</p>';
+                return;
+            }
+
+            journalListContainer.innerHTML = ''; // 컨테이너 비우기
+
+            // 2. 각 일지(Journal)를 렌더링
+            journals.forEach(journal => {
+                const journalTime = new Date(journal.journalTime).toLocaleString('ko-KR');
+
+                // 3. 일지 내의 개별 로그(Log) 목록 렌더링
+                let logsHtml = '<ul class="journal-logs-list">';
+                journal.logs.forEach(log => {
+                    const statusText = log.intakeStatus === 'TAKEN' ? '복용 완료' : '건너뜀';
+                    logsHtml += `
+                        <li class="log-detail-item">
+                            <span>${log.medicationName} (예정: ${log.intakeTime.substring(0, 5)})</span>
+                            <span class="log-status status-${log.intakeStatus}">${statusText}</span>
+                        </li>
+                    `;
+                });
+                logsHtml += '</ul>';
+
+                // 4. 전체 일지 카드 HTML
+                journalListContainer.innerHTML += `
+                    <div class="journal-entry">
+                        <div class="journal-header">
+                            <span class="journal-time">${journalTime}</span>
+                            <span class="journal-emoji">${journal.conditionEmoji || ''}</span>
+                        </div>
+                        ${journal.logMemo ? `<div class="journal-memo">${journal.logMemo}</div>` : ''}
+                        <h4>포함된 기록:</h4>
+                        ${logsHtml}
+                    </div>
+                `;
+            });
+
+        } catch (error) {
+            console.error(error);
+            journalListContainer.innerHTML = `<p style="color: red;">${error.message}</p>`;
+        }
+    }
+</script>
+
+</body>
+</html>

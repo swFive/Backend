@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>복용 캘린더</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .calendar-container { max-width: 1000px; margin: auto; padding: 20px; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; user-select: none; }
+        .calendar-header h2 { margin: 0; font-size: 1.8em; }
+        .calendar-header button { padding: 10px 15px; cursor: pointer; border: 1px solid #ddd; background-color: white; border-radius: 8px; font-size: 1.2em; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); border-top: 2px solid #333; }
+        .day-header, .day { border-bottom: 1px solid #ddd; border-left: 1px solid #ddd; padding: 10px; min-height: 120px; box-sizing: border-box; }
+        .day:nth-child(7n+1) { border-left: none; }
+        .day-header { font-weight: bold; text-align: center; background-color: #f9f9f9; min-height: auto; padding: 15px 10px; }
+        .day-number { font-weight: bold; font-size: 1.1em; }
+        .day.other-month .day-number { color: #ccc; }
+        .day.today { background-color: #eaf4ff; }
+        .day.today .day-number { color: white; background-color: #007bff; border-radius: 50%; padding: 5px; display: inline-block; width: 30px; height: 30px; text-align: center; line-height: 20px; }
+        .events { margin-top: 8px; font-size: 0.85em; }
+        .event { display: flex; align-items: center; margin-bottom: 4px; padding: 3px 5px; border-radius: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .event-status { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; flex-shrink: 0; }
+        .event.TAKEN .event-status { background-color: #28a745; }
+        .event.SKIPPED .event-status { background-color: #ffc107; }
+        .event.LATE .event-status { background-color: #dc3545; }
+    </style>
+</head>
+<body>
+
+<div class="calendar-container">
+    <div class="calendar-header">
+        <button id="prevMonth">‹</button>
+        <h2 id="currentMonthYear"></h2>
+        <button id="nextMonth">›</button>
+    </div>
+    <div class="calendar-grid">
+        <div class="day-header">일</div>
+        <div class="day-header">월</div>
+        <div class="day-header">화</div>
+        <div class="day-header">수</div>
+        <div class="day-header">목</div>
+        <div class="day-header">금</div>
+        <div class="day-header">토</div>
+    </div>
+    <div class="calendar-grid" id="calendar">
+    </div>
+</div>
+
+<script>
+    const calendar = document.getElementById('calendar');
+    const currentMonthYear = document.getElementById('currentMonthYear');
+    const prevMonthBtn = document.getElementById('prevMonth');
+    const nextMonthBtn = document.getElementById('nextMonth');
+
+    let currentDate = new Date();
+    // const userId = 1; // === 1. [수정] 보안을 위해 하드코딩된 userId 제거 ===
+
+    async function renderCalendar(year, month) {
+        currentMonthYear.innerText = `${year}년 ${month}월`;
+        calendar.innerHTML = '';
+
+        try {
+            // === 2. [수정] fetch URL에서 ?userId=${userId} 파라미터 제거 ===
+            const response = await fetch(`/api/calendar?year=${year}&month=${month}`);
+            if(!response.ok) throw new Error('캘린더 데이터를 불러오는데 실패했습니다.');
+            const eventsData = await response.json();
+
+            const firstDay = new Date(year, month - 1, 1);
+            const lastDay = new Date(year, month, 0);
+
+            // (이전 날짜 공백 채우기)
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                const blankDiv = document.createElement('div');
+                blankDiv.className = 'day other-month';
+                calendar.appendChild(blankDiv);
+            }
+
+            // (이달 날짜 채우기)
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day';
+
+                const dayNumber = document.createElement('span');
+                dayNumber.className = 'day-number';
+                dayNumber.innerText = day;
+                dayDiv.appendChild(dayNumber);
+
+                const today = new Date();
+                if (year === today.getFullYear() && month - 1 === today.getMonth() && day === today.getDate()) {
+                    dayDiv.classList.add('today');
+                }
+
+                const dateString = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                if (eventsData[dateString]) {
+                    const eventsDiv = document.createElement('div');
+                    eventsDiv.className = 'events';
+                    eventsData[dateString].forEach(event => {
+                        const eventDiv = document.createElement('div');
+                        eventDiv.className = 'event'; // 기본 클래스
+
+                        // === 3. [수정] event.status가 null이 아닐 때만(TAKEN, SKIPPED 등) 클래스 추가 ===
+                        if (event.status) {
+                            eventDiv.classList.add(event.status);
+                        }
+
+                        eventDiv.innerHTML = `<div class="event-status"></div><span>${event.intakeTime.substring(0, 5)} ${event.medicationName}</span>`;
+                        eventsDiv.appendChild(eventDiv);
+                    });
+                    dayDiv.appendChild(eventsDiv);
+                }
+
+                calendar.appendChild(dayDiv);
+            }
+        } catch(error) {
+            console.error(error);
+            alert(error.message);
+        }
+    }
+
+    prevMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar(currentDate.getFullYear(), currentDate.getMonth() + 1);
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar(currentDate.getFullYear(), currentDate.getMonth() + 1);
+    });
+
+    // Initial render
+    renderCalendar(currentDate.getFullYear(), currentDate.getMonth() + 1);
+</script>
+
+</body>
+</html>
