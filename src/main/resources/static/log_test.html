@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>오늘의 복용 기록 (그룹 저장)</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .medication-group { border: 1px solid #ccc; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .schedule-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
+        .schedule-info { flex-grow: 1; }
+        .schedule-info strong { font-size: 1.1em; }
+        .schedule-info span { font-size: 0.9em; color: #555; }
+        .log-checkbox { width: 20px; height: 20px; margin-right: 15px; }
+        button { cursor: pointer; padding: 8px 12px; border-radius: 4px; border: 1px solid #007bff; background-color: #007bff; color: white; margin-left: 5px; }
+        button.skip { background-color: #ffc107; border-color: #ffc107; }
+        button.cancel { background-color: #6c757d; border-color: #6c757d; }
+        .recorded { color: #28a745; font-weight: bold; }
+
+        #journal-form {
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 2px solid #007bff;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        #journal-form h2 { margin-top: 0; }
+        #journal-form div { margin-bottom: 10px; }
+        #journal-form label { display: block; margin-bottom: 5px; font-weight: 500; }
+        #journal-form input[type="datetime-local"],
+        #journal-form input[type="text"],
+        #journal-form textarea { width: 95%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        #journal-form button { background-color: #28a745; border: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>오늘의 복용 기록</h1>
+    <p>오늘 복용할 약 목록입니다. 먼저 '개별 저장'을 하신 후, '일지 작성'을 진행하세요.</p>
+    <button onclick="fetchAndDisplaySchedules()">🔄 새로고침</button>
+
+    <div id="scheduleListContainer">
+    </div>
+
+    <div id="journal-form">
+        <h2>선택한 약 일지 작성</h2>
+        <p>
+            '복용 완료' 또는 '건너뜀'으로 <b>이미 기록된</b> 약들 중, 일지로 묶을 항목을 위에서 체크하세요.
+            (아직 기록하지 않은 약은 먼저 '개별 저장'을 눌러 기록해야 합니다.)
+        </p>
+        <div>
+            <label for="journal-time">일지 작성 시각</label>
+            <input type="datetime-local" id="journal-time">
+        </div>
+        <div>
+            <label for="journal-emoji">컨디션 (이모지)</label>
+            <input type="text" id="journal-emoji" placeholder="예: 😊">
+        </div>
+        <div>
+            <label for="journal-memo">증상/메모</label>
+            <textarea id="journal-memo" rows="3"></textarea>
+        </div>
+        <button onclick="submitJournal()">일지 저장 (그룹화)</button>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        fetchAndDisplaySchedules();
+        document.getElementById('journal-time').value = getCurrentDateTimeLocal();
+    };
+
+    const scheduleListContainer = document.getElementById('scheduleListContainer');
+
+    function getCurrentDateTimeLocal() {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        return now.toISOString().slice(0, 16);
+    }
+
+    // 1. '오늘의 약' 목록 조회 (GET /api/medicines)
+    async function fetchAndDisplaySchedules() {
+        try {
+            const response = await fetch('/api/medicines'); // (findAllWithLogs 호출)
+            if (!response.ok) throw new Error('데이터를 불러오는데 실패했습니다.');
+            const medicationsWithLogs = await response.json();
+
+            scheduleListContainer.innerHTML = '';
+            if (medicationsWithLogs.length === 0) {
+                scheduleListContainer.innerHTML = '<p>표시할 약 스케줄이 없습니다.</p>';
+                return;
+            }
+
+            medicationsWithLogs.forEach(med => {
+                const medGroupDiv = document.createElement('div');
+                medGroupDiv.className = 'medication-group';
+                let schedulesHtml = `<h3>💊 ${med.name}</h3>`;
+
+                if (med.schedulesWithLogs && med.schedulesWithLogs.length > 0) {
+                    med.schedulesWithLogs.forEach(sc => {
+                        const isDisabled = (sc.logId != null);
+                        let statusHtml = '';
+
+                        if (isDisabled) {
+                            // (A) 이미 기록된 항목: '일지'에 포함할 '체크박스' + '취소' 버튼
+                            const statusText = sc.intakeStatus === 'TAKEN' ? '복용 완료' : '건너뜀';
+                            statusHtml = `
+                                <input type="checkbox" class="log-checkbox" value="${sc.logId}">
+                                <div class="schedule-info">
+                                    <div class="log-header"><strong>${sc.intakeTime}</strong> <span class="recorded">(${statusText})</span></div>
+                                    <span class="log-details">주기: ${sc.frequency}</span>
+                                </div>
+                                <button class="cancel" onclick="cancelIntake(${sc.logId})">취소</button>
+                            `;
+                        } else {
+                            // (B) 아직 기록 안 된 항목: '개별 저장' 버튼
+                            statusHtml = `
+                                <input type="checkbox" disabled title="먼저 개별 기록을 완료하세요">
+                                <div class="schedule-info">
+                                    <div class="log-header"><strong>${sc.intakeTime}</strong></div>
+                                    <span class="log-details">주기: ${sc.frequency}</span>
+                                </div>
+                                <button onclick="recordIntake(${sc.scheduleId}, 'TAKEN')">개별 저장(복용)</button>
+                                <button class="skip" onclick="recordIntake(${sc.scheduleId}, 'SKIPPED')">개별 저장(건너뜀)</button>
+                            `;
+                        }
+
+                        schedulesHtml += `<div class="schedule-item">${statusHtml}</div>`;
+                    });
+                } else {
+                    schedulesHtml += '<p>오늘 예정된 스케줄이 없습니다.</p>';
+                }
+                medGroupDiv.innerHTML = schedulesHtml;
+                scheduleListContainer.appendChild(medGroupDiv);
+            });
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+    }
+
+    // 2. '개별 저장' (POST /api/logs/intake) 호출
+    async function recordIntake(scheduleId, status) {
+        if (!confirm(`'${status === 'TAKEN' ? '복용 완료' : '건너뜀'}'으로 기록하시겠습니까?`)) return;
+
+        // (MedicationLogDto에 맞게 'recordTime'을 포함하여 전송)
+        const payload = {
+            scheduleId: scheduleId,
+            intakeStatus: status,
+            recordTime: getCurrentDateTimeLocal() + ":00"
+        };
+
+        try {
+            const response = await fetch('/api/logs/intake', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || '기록 저장에 실패했습니다.');
+            }
+            alert("개별 복용 기록이 저장되었습니다. 이제 일지에 포함시킬 수 있습니다.");
+            fetchAndDisplaySchedules(); // 목록 새로고침
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+    }
+
+    // 3. '그룹 저장' (POST /api/logs/journal) 호출
+    async function submitJournal() {
+        const checkedBoxes = document.querySelectorAll('.log-checkbox:checked:not(:disabled)');
+        const logIds = Array.from(checkedBoxes).map(cb => parseInt(cb.value, 10));
+
+        if (logIds.length === 0) {
+            alert('일지에 추가할 기록을 1개 이상 선택하세요.');
+            return;
+        }
+
+        const journalTime = document.getElementById('journal-time').value;
+        const conditionEmoji = document.getElementById('journal-emoji').value;
+        const logMemo = document.getElementById('journal-memo').value;
+
+        if (!journalTime) {
+            alert('일지 작성 시각을 입력하세요.');
+            return;
+        }
+
+        const payload = {
+            logIds: logIds,
+            journalTime: journalTime + ":00",
+            conditionEmoji: conditionEmoji || null,
+            logMemo: logMemo || null
+        };
+
+        try {
+            const response = await fetch('/api/logs/journal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || '일지 저장에 실패했습니다.');
+            }
+
+            alert('복용 일지가 성공적으로 저장되었습니다.');
+            fetchAndDisplaySchedules(); // 목록 새로고침
+
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+    }
+
+    // 4. '기록 취소' (DELETE /api/logs/{logId})
+    async function cancelIntake(logId) {
+        if (!confirm('이 복용 기록을 삭제하시겠습니까? (연결된 일지는 삭제되지 않습니다)')) return;
+
+        try {
+            const response = await fetch(`/api/logs/${logId}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('기록 삭제에 실패했습니다.');
+            alert('복용 기록이 삭제되었습니다.');
+            fetchAndDisplaySchedules();
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+    }
+</script>
+</body>
+</html>
