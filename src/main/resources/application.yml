@@ -6,7 +6,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
-    hibernate:
+    show-sql: true # 민주님
+    hibernate:  #이거 일단 none.
       ddl-auto: none # 얘를 update로 두면 DB 오류 조지게 남. 네이밍 오류 절대 방지
       naming: # 명시적으로 카멜 지정. 지금 카멜 쓰고 있음.
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -14,9 +15,30 @@ spring:
       hibernate:
         format_sql: true
 
+
   sql:
     init:
       mode: never             # 내장 schema.sql/data.sql 강제 실행 방지
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 6964b632dc5216bf45845322f3c4f8a9
+            client-secret: 5ahGyvMKmrclC8WuTKtLMo4gSxy5QdyV
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+            client-name: Kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
 jackson:
   time-zone: Asia/Seoul
@@ -31,7 +53,7 @@ app:
     enabled: false
 
 springdoc:
-  packages-to-scan: com.example.medicineReminder.web.controller
+  #packages-to-scan: com.example.medicineReminder.web.controller
   paths-to-match: /api/**,/v3/api-docs/**
   remove-broken-reference-definitions: true
   swagger-ui:

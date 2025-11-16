@@ -5,52 +5,45 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dab4d769-8918-4d42-8b4e-47e725f1d99e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/CorsConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/DbProbeRunner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/FirebaseConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/SwaggerConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/entity/AppUsers.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/entity/FcmDeviceTokens.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/entity/IntakeSchedules.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/entity/MedicationIntakeLogs.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/entity/NotificationSendLogs.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/entity/UserMedications.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/entity/UserNotificationSettings.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/model/IntakeStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/repository/AppUsersRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/repository/FcmDeviceTokensRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/repository/IntakeSchedulesRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/repository/MedicationIntakeLogsRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/repository/NotificationSendLogsRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/repository/UserMedicationsRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/repository/UserNotificationSettingsRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/scheduler/NotificationScheduler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/service/FcmTokenService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/service/IntakeLogService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/service/MedicationService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/service/NotificationService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/service/NotificationSettingService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/service/ScheduleService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/GlobalExceptionHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/controller/IntakeLogController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/controller/MedicationController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/controller/NotificationSettingController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/controller/NotificationTokenController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/dto/intake/IntakeLogCreateRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/dto/intake/IntakeLogResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/dto/intake/IntakeStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/dto/medication/MedicationCreateRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/dto/medication/MedicationPatchRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/dto/medication/MedicationResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/dto/notify/NotificationSettingRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/dto/notify/NotificationTokenRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/dto/schedule/ScheduleCreateRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/dto/schedule/SchedulePatchRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/dto/schedule/ScheduleResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/IntakeJournal/IntakeJournal.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/IntakeJournal/IntakeJournalController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/IntakeJournal/IntakeJournalRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/IntakeJournal/IntakeJournalService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/IntakeJournal/JournalCreateDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/IntakeJournal/JournalLogDetailDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/IntakeJournal/JournalViewDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/calendar/CalendarController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/calendar/CalendarEventDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/calendar/CalendarService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/controller/MyController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/AppUser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/domain/PrincipalDetails.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/medication_log/MedicationIntakeLog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/medication_log/MedicationLogController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/medication_log/MedicationLogDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/medication_log/MedicationLogRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/medication_log/MedicationLogService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/AppUser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/AppUserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/IntakeSchedule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/IntakeScheduleController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/IntakeScheduleDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/IntakeScheduleRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/IntakeScheduleService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/MedicationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/MedicationDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/MedicationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/MedicationUpdateDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/MedicationWithLogsDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/ScheduleLogStatusDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/UserMedication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/UserMedicationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/service/CustomOAuth2UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/service/DefaultOAuth2UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/MedicineReminderApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/MedicineReminderApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/SwaggerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/SwaggerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
