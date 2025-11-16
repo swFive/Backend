@@ -6,10 +6,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/medicines")
-public class controller {
+public class MedicationController {
     private final MedicationService MedicationService;
 
-    public controller(MedicationService MedicationService) {
+    public MedicationController(MedicationService MedicationService) {
         this.MedicationService = MedicationService;
     }
 
