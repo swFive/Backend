@@ -1,8 +1,11 @@
 package com.example.medicineReminder.medication_log;
 
+import com.example.medicineReminder.web.dto.Statistics.MedicationStatisticsDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query; // [수정]
 import org.springframework.data.repository.query.Param; // [수정]
+
+import java.time.LocalDate;
 import java.time.LocalDateTime; // [수정]
 import java.util.List;
 
@@ -18,4 +21,106 @@ public interface MedicationLogRepository extends JpaRepository<MedicationIntakeL
 
     // (기존) 특정 약의 전체 로그 조회 쿼리 (medication_list.html의 "기록 보기"에서 사용)
     List<MedicationIntakeLog> findByScheduleIdInOrderByRecordTimeDesc(List<Long> scheduleIds);
+
+    @Query(value = """
+    SELECT
+        U.name AS userName,
+        DATE(L.record_time) AS date,
+        CAST(COALESCE(COUNT(L.log_id), 0) AS SIGNED) AS totalRecords,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status IN ('TAKEN', 'LATE') THEN 1 ELSE 0 END), 0) AS SIGNED) AS successCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status = 'TAKEN' THEN 1 ELSE 0 END), 0) AS SIGNED) AS onTimeCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status = 'LATE' THEN 1 ELSE 0 END), 0) AS SIGNED) AS lateCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status IN ('LATE', 'SKIPPED') THEN 1 ELSE 0 END), 0) AS SIGNED) AS failureCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status = 'SKIPPED' THEN 1 ELSE 0 END), 0) AS SIGNED) AS skippedCount,
+        
+        ROUND(SUM(CASE WHEN L.intake_status IN ('TAKEN', 'LATE') THEN 1.0 ELSE 0.0 END) * 100.0 / NULLIF(COUNT(L.log_id),0),1) AS successRate,
+        ROUND(SUM(CASE WHEN L.intake_status IN ('LATE', 'SKIPPED') THEN 1.0 ELSE 0.0 END) * 100.0 / NULLIF(COUNT(L.log_id),0),1) AS failureRate
+    FROM
+        MedicationIntakeLogs L
+    JOIN
+        AppUsers U ON L.user_id = U.user_id
+    WHERE
+        U.user_id = :userId
+        AND L.record_time >= :startDateTime
+        AND L.record_time < :endDateTime
+    GROUP BY
+        DATE(L.record_time), U.user_id, U.name
+    ORDER BY
+        date ASC
+    """, nativeQuery = true)
+    List<MedicationStatisticsDto> findMedicationStatisticsByDateRange(
+            @Param("userId") Long userId,
+            @Param("startDateTime") LocalDateTime startDateTime,
+            @Param("endDateTime") LocalDateTime endDateTime
+    );
+
+    // 2. 🚀 [추가된 메서드] 주/월별 총합 통계용 쿼리 (GROUP BY DATE 제거)
+    @Query(value = """
+    SELECT
+        U.name AS userName,
+        DATE(:startDateTime) AS date, 
+        
+        -- 💡 [수정 적용] Long 타입 매핑 및 NULL 방지를 위해 CAST와 COALESCE 적용
+        CAST(COALESCE(COUNT(L.log_id), 0) AS SIGNED) AS totalRecords,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status IN ('TAKEN', 'LATE') THEN 1 ELSE 0 END), 0) AS SIGNED) AS successCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status = 'TAKEN' THEN 1 ELSE 0 END), 0) AS SIGNED) AS onTimeCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status = 'LATE' THEN 1 ELSE 0 END), 0) AS SIGNED) AS lateCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status IN ('LATE', 'SKIPPED') THEN 1 ELSE 0 END), 0) AS SIGNED) AS failureCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status = 'SKIPPED' THEN 1 ELSE 0 END), 0) AS SIGNED) AS skippedCount,
+        
+        ROUND(SUM(CASE WHEN L.intake_status IN ('TAKEN', 'LATE') THEN 1.0 ELSE 0.0 END) * 100.0 / NULLIF(COUNT(L.log_id),0),1) AS successRate,
+        ROUND(SUM(CASE WHEN L.intake_status IN ('LATE', 'SKIPPED') THEN 1.0 ELSE 0.0 END) * 100.0 / NULLIF(COUNT(L.log_id),0),1) AS failureRate
+    FROM
+        MedicationIntakeLogs L
+    JOIN
+        AppUsers U ON L.user_id = U.user_id
+    WHERE
+        U.user_id = :userId
+        AND L.record_time >= :startDateTime
+        AND L.record_time < :endDateTime
+        
+    GROUP BY
+        U.user_id, U.name
+    ORDER BY
+        U.name ASC
+    """, nativeQuery = true)
+    List<MedicationStatisticsDto> findAggregateStatisticsByDateRange(
+            @Param("userId") Long userId,
+            @Param("startDateTime") LocalDateTime startDateTime,
+            @Param("endDateTime") LocalDateTime endDateTime
+    );
+
+//TEXT
+    @Query(value = """
+    SELECT
+        U.name AS userName,
+        DATE(:startDateTime) AS date, 
+        CAST(COALESCE(COUNT(L.log_id), 0) AS SIGNED) AS totalRecords,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status IN ('TAKEN', 'LATE') THEN 1 ELSE 0 END), 0) AS SIGNED) AS successCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status = 'TAKEN' THEN 1 ELSE 0 END), 0) AS SIGNED) AS onTimeCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status = 'LATE' THEN 1 ELSE 0 END), 0) AS SIGNED) AS lateCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status IN ('LATE', 'SKIPPED') THEN 1 ELSE 0 END), 0) AS SIGNED) AS failureCount,
+        CAST(COALESCE(SUM(CASE WHEN L.intake_status = 'SKIPPED' THEN 1 ELSE 0 END), 0) AS SIGNED) AS skippedCount,
+        ROUND(SUM(CASE WHEN L.intake_status IN ('TAKEN', 'LATE') THEN 1.0 ELSE 0.0 END) * 100.0 / NULLIF(COUNT(L.log_id),0),1) AS successRate,
+        ROUND(SUM(CASE WHEN L.intake_status IN ('LATE', 'SKIPPED') THEN 1.0 ELSE 0.0 END) * 100.0 / NULLIF(COUNT(L.log_id),0),1) AS failureRate
+    FROM
+        MedicationIntakeLogs L
+    JOIN
+        AppUsers U ON L.user_id = U.user_id
+    WHERE
+        U.user_id = :userId
+        AND L.record_time >= :startDateTime
+        AND L.record_time < :endDateTime
+    GROUP BY
+        U.user_id, U.name
+    ORDER BY
+        U.name ASC
+    """, nativeQuery = true)
+    List<Object[]> findAggregateStatisticsRaw(
+            @Param("userId") Long userId,
+            @Param("startDateTime") LocalDateTime startDateTime,
+            @Param("endDateTime") LocalDateTime endDateTime
+    );
+
+
 }
