@@ -117,4 +117,40 @@ public class IntakeJournalService {
                 .logs(logDetails)
                 .build();
     }
+    // === [신규] 일지 수정 로직 ===
+    @Transactional
+    public IntakeJournal updateJournal(Long journalId, JournalCreateDto updateDto) {
+        Long currentUserId = getCurrentUserId();
+        IntakeJournal journal = journalRepository.findById(journalId)
+                .orElseThrow(() -> new RuntimeException("일지 ID 없음: " + journalId));
+
+        if (!journal.getUser().getId().equals(currentUserId)) {
+            throw new RuntimeException("권한 없음");
+        }
+
+        // 내용 업데이트 (시간, 이모지, 메모)
+        if (updateDto.getJournalTime() != null) journal.setJournalTime(updateDto.getJournalTime());
+        if (updateDto.getConditionEmoji() != null) journal.setConditionEmoji(updateDto.getConditionEmoji());
+        if (updateDto.getLogMemo() != null) journal.setLogMemo(updateDto.getLogMemo());
+
+        // (참고: 묶인 로그 목록을 수정하는 기능은 복잡하므로 일단 제외했습니다. 필요시 추가 가능)
+
+        return journalRepository.save(journal);
+    }
+
+    // === [신규] 일지 삭제 로직 ===
+    @Transactional
+    public void deleteJournal(Long journalId) {
+        Long currentUserId = getCurrentUserId();
+        IntakeJournal journal = journalRepository.findById(journalId)
+                .orElseThrow(() -> new RuntimeException("일지 ID 없음: " + journalId));
+
+        if (!journal.getUser().getId().equals(currentUserId)) {
+            throw new RuntimeException("권한 없음");
+        }
+
+        // 일지를 삭제하면, 연결된 로그들의 journal_id는 NULL이 됩니다 (DB 외래키 설정에 따름)
+        // 또는 명시적으로 끊어줄 수도 있습니다.
+        journalRepository.delete(journal);
+    }
 }
