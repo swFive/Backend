@@ -3,7 +3,7 @@ package com.example.medicineReminder.service;
 // CustomOAuth2UserService.java
 
 import com.example.medicineReminder.domain.PrincipalDetails;
-import com.example.medicineReminder.domain.AppUser;
+import com.example.medicineReminder.domain.entity.AppUsers;
 import com.example.medicineReminder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String nickname = (String) ((Map)oAuth2User.getAttributes().get("properties")).get("nickname");
 
         log.info("카카오 사용자 정보 확인: kakaoId={}, nickname={}", kakaoId, nickname);
-        AppUser user = userRepository.findByKakaoId(kakaoId)
+        AppUsers user = userRepository.findByKakaoId(kakaoId)
                 .map(existingUser -> {
                     // 기존 사용자가 존재할 경우
                     log.info("기존 회원입니다. DB에서 사용자를 조회합니다: {}", existingUser.getNickname());
@@ -38,7 +38,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 })
                 .orElseGet(() -> {
                     log.info("신규 회원입니다. DB에 사용자를 저장합니다.");
-                    AppUser newUser = AppUser.builder()
+                    AppUsers newUser = AppUsers.builder()
                             .kakaoId(kakaoId)
                             .nickname(nickname)
                             .build();

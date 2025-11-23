@@ -1,7 +1,7 @@
 package com.example.medicineReminder.IntakeJournal;
 
+import com.example.medicineReminder.domain.entity.AppUsers;
 import com.example.medicineReminder.medication_log.MedicationIntakeLog;
-import com.example.medicineReminder.mediinfo.AppUser; // [수정]
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -25,7 +25,7 @@ public class IntakeJournal {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private AppUser user; // ('mediinfo' 패키지의 AppUser)
+    private AppUsers user; // ('mediinfo' 패키지의 AppUser)
 
     @Column(name = "journal_time", nullable = false)
     private LocalDateTime journalTime;

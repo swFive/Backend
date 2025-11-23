@@ -1,7 +1,9 @@
 package com.example.medicineReminder.mediinfo;
 
+import com.example.medicineReminder.domain.entity.AppUsers;
 import com.example.medicineReminder.medication_log.MedicationIntakeLog;
 import com.example.medicineReminder.medication_log.MedicationLogRepository;
+import com.example.medicineReminder.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek; // (nextIntakeTime 계산용)
@@ -17,9 +19,9 @@ import java.util.stream.Collectors;
 public class MedicationService {
     private final UserMedicationRepository repo;
     private final MedicationLogRepository logRepo;
-    private final AppUserRepository userRepo;
+    private final UserRepository userRepo;
 
-    public MedicationService(UserMedicationRepository repo, MedicationLogRepository logRepo, AppUserRepository userRepo) {
+    public MedicationService(UserMedicationRepository repo, MedicationLogRepository logRepo, UserRepository userRepo) {
         this.repo = repo;
         this.logRepo = logRepo;
         this.userRepo = userRepo;
@@ -31,7 +33,7 @@ public class MedicationService {
     }
 
     // 현재 사용자 AppUser 객체를 가져오는 메서드
-    private AppUser getCurrentUser() {
+    private AppUsers getCurrentUser() {
         Long currentUserId = getCurrentUserId();
         return userRepo.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("현재 사용자 정보를 찾을 수 없습니다: " + currentUserId));
@@ -40,7 +42,7 @@ public class MedicationService {
     // 1. 약 저장(save) 메서드
     @Transactional
     public UserMedication save(MedicationDto MedicationDto) {
-        AppUser currentUser = getCurrentUser();
+        AppUsers currentUser = getCurrentUser();
 
         UserMedication medication = new UserMedication();
         medication.setUser(currentUser);

@@ -2,6 +2,7 @@
 
 package com.example.medicineReminder.domain;
 
+import com.example.medicineReminder.domain.entity.AppUsers;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -12,17 +13,17 @@ import java.util.Map;
 
 public class PrincipalDetails implements OAuth2User {
 
-    private final AppUser user;
+    private final AppUsers user;
     private final Map<String, Object> attributes;
 
     // OAuth2 로그인 시 사용되는 생성자
-    public PrincipalDetails(AppUser user, Map<String, Object> attributes) {
+    public PrincipalDetails(AppUsers user, Map<String, Object> attributes) {
         this.user = user;
         this.attributes = attributes;
     }
 
     // 우리 서비스의 User 객체를 반환하는 메소드
-    public AppUser getUser() {
+    public AppUsers getUser() {
         return user;
     }
 

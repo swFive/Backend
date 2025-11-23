@@ -1,28 +1,31 @@
 package com.example.medicineReminder.domain.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.*; // jakarta.persistence.* 로 임포트
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Getter
 @NoArgsConstructor
-@Entity
-@Table(name = "AppUsers")
+@Table(name = "appusers")
 public class AppUsers {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "user_id") // 2. 'id' 필드를 DB의 'user_id' 컬럼과 연결합니다.
+    private Long id;
 
-    @Column(name = "kakao_id", nullable = false, unique = true)
+    // 3. AppUsers 테이블에 'kakao_id' 컬럼을 추가해야 합니다. (예: kakao_id BIGINT)
+    // 이 필드는 카카오 로그인을 구현하는 데 필수적입니다.
+    @Column(name="kakao_id")
     private Long kakaoId;
 
-    @Column(name = "name", nullable = false, length = 50)
-    private String name;
+    @Column(name = "name") // 4. 'nickname' 필드를 DB의 'name' 컬럼과 연결합니다.
+    private String nickname;
 
-    public AppUsers(Long kakaoId, String name) {
+    @Builder
+    public AppUsers(Long kakaoId, String nickname) {
         this.kakaoId = kakaoId;
-        this.name = name;
+        this.nickname = nickname;
     }
 }

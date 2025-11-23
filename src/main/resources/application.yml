@@ -53,6 +53,10 @@ reminder:
 app:
   scheduler:
     enabled: false
+  oauth2:
+    redirect-uri: http://localhost:63342/Frontend/index.html
+
+
 
 springdoc:
   #packages-to-scan: com.example.medicineReminder.web.controller
@@ -74,3 +78,13 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.springframework.http.converter.json: DEBUG
+
+
+jwt:
+  # 🚨 1. secret: Base64로 인코딩된 256비트 이상의 강력한 시크릿 키입니다.
+  #    (이 키는 보안을 위해 반드시 실제 배포 시 변경해야 합니다.)
+  secret: NFv924+o8pB+W6/XQpYnQ1X7kLzG5tY0Z3j4jE3rW8aC2dI1sA9xH7yK6lO0mMqR1jP3qL7fX0wD4sF5uE6yG9hJ7aK2sI8eW4x
+
+  # 🚨 2. token-validity-in-seconds: 토큰 유효 시간 (1시간)
+  token-validity-in-seconds: 3600
+

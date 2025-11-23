@@ -1,8 +1,8 @@
 package com.example.medicineReminder.mediinfo;
 
+import com.example.medicineReminder.domain.entity.AppUsers;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore; // === [1. 이거 추가] ===
-import com.example.medicineReminder.mediinfo.AppUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +29,7 @@ public class IntakeSchedule {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private AppUser user;
+    private AppUsers user;
 
     @Column(name = "intake_time", nullable = false)
     private LocalTime intakeTime;

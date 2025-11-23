@@ -1,11 +1,11 @@
 package com.example.medicineReminder.IntakeJournal;
 
+import com.example.medicineReminder.domain.entity.AppUsers;
 import com.example.medicineReminder.medication_log.MedicationIntakeLog;
 import com.example.medicineReminder.medication_log.MedicationLogRepository;
-import com.example.medicineReminder.mediinfo.AppUser;
-import com.example.medicineReminder.mediinfo.AppUserRepository;
 import com.example.medicineReminder.mediinfo.IntakeSchedule; // [추가]
 import com.example.medicineReminder.mediinfo.IntakeScheduleRepository; // [추가]
+import com.example.medicineReminder.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +19,12 @@ public class IntakeJournalService {
 
     private final IntakeJournalRepository journalRepository;
     private final MedicationLogRepository logRepository;
-    private final AppUserRepository userRepository;
+    private final UserRepository userRepository;
     private final IntakeScheduleRepository scheduleRepository; // [추가]
 
     public IntakeJournalService(IntakeJournalRepository journalRepository,
                                 MedicationLogRepository logRepository,
-                                AppUserRepository userRepository,
+                                UserRepository userRepository,
                                 IntakeScheduleRepository scheduleRepository) { // [추가]
         this.journalRepository = journalRepository;
         this.logRepository = logRepository;
@@ -37,7 +37,7 @@ public class IntakeJournalService {
     @Transactional
     public IntakeJournal createJournal(JournalCreateDto journalDto) {
         Long currentUserId = getCurrentUserId();
-        AppUser currentUser = userRepository.findById(currentUserId)
+        AppUsers currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
         IntakeJournal journal = new IntakeJournal();

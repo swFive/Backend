@@ -1,5 +1,6 @@
 package com.example.medicineReminder.mediinfo;
 
+import com.example.medicineReminder.domain.entity.AppUsers;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -22,7 +23,7 @@ public class UserMedication {
     @JsonIgnore // (Lazy-loading 프록시 객체 JSON 변환 오류 방지)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private AppUser user;
+    private AppUsers user;
 
     @Column(nullable = false, length = 100)
     private String name;
