@@ -3,6 +3,7 @@ package com.example.medicineReminder.filter;
 import com.example.medicineReminder.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // "Bearer " 접두사를 제거하고 토큰 본문만 반환
             return bearerToken.substring(7);
         }
+
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("accessToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
         return null;
     }
 
@@ -47,6 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 1. 요청 헤더에서 JWT 토큰 추출
         String jwt = resolveToken(request);
+
 
         // 2. 토큰 유효성 검사
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {

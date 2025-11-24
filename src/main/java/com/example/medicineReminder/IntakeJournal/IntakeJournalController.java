@@ -1,5 +1,6 @@
 package com.example.medicineReminder.IntakeJournal;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/journals")
+@SecurityRequirement(name = "bearerAuth")
 public class IntakeJournalController {
 
     private final IntakeJournalService journalService;

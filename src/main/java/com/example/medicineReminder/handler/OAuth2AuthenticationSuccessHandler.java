@@ -3,6 +3,7 @@ package com.example.medicineReminder.handler;
 import com.example.medicineReminder.jwt.JwtTokenProvider;
 import com.example.medicineReminder.domain.PrincipalDetails;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,12 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         // 2. 획득한 사용자 ID 기반으로 JWT 생성
         String jwtToken = tokenProvider.createToken(userId);
+
+        Cookie jwtCookie = new Cookie("accessToken", jwtToken);
+        jwtCookie.setPath("/");       // 모든 경로에서 쿠키 사용
+        jwtCookie.setHttpOnly(true);  // 자바스크립트로 접근 못하게 막음 (보안)
+        jwtCookie.setMaxAge(3600);    // 1시간 동안 유지 (토큰 유효기간이랑 맞춤)
+        response.addCookie(jwtCookie);
 
         // 3. JWT를 쿼리 파라미터로 포함하여 프론트엔드 URL 생성
         String targetUrl = UriComponentsBuilder.fromUriString(REDIRECT_URI)
