@@ -4,18 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dab4d769-8918-4d42-8b4e-47e725f1d99e" name="Changes" comment="fix : redirect-uri 변경">
+    <list default="true" id="dab4d769-8918-4d42-8b4e-47e725f1d99e" name="Changes" comment="journal fix">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/util/SecurityUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/IntakeJournal/IntakeJournalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/IntakeJournal/IntakeJournalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/calendar/CalendarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/calendar/CalendarController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/CorsConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/controller/MyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/controller/MyController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/filter/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/filter/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/handler/OAuth2AuthenticationSuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/handler/OAuth2AuthenticationSuccessHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/controller/MedicationStatisticsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/web/controller/MedicationStatisticsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/IntakeJournal/IntakeJournalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/IntakeJournal/IntakeJournalService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/calendar/CalendarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/calendar/CalendarService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/medication_log/MedicationLogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/medication_log/MedicationLogService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/IntakeScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/IntakeScheduleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/MedicationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/medicineReminder/mediinfo/MedicationService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,13 +54,13 @@
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
     &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;minju0428&quot;
+    &quot;assignee&quot;: &quot;sanhayeon&quot;
   }
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/swFive/Backend.git&quot;,
-    &quot;accountId&quot;: &quot;a5daa39d-249f-4b9a-b3e1-f43a1bac944b&quot;
+    &quot;url&quot;: &quot;https://github.com/swFive/Backend&quot;,
+    &quot;accountId&quot;: &quot;1ae915cb-e3f5-4238-bbee-7aca99a6f047&quot;
   }
 }</component>
   <component name="MarkdownSettingsMigration">
@@ -83,38 +80,45 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Gradle.Build Backend.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Backend 빌드.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.MedicineReminder [:MedicineReminderApplication.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.소스 다운로드.executor&quot;: &quot;Run&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
     &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
     &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.MedicineReminderApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.이름이 지정되지 않았습니다.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/user/Desktop/0_2025년/2025_2학기/SW플젝4/workspace/MedicineReminder&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ksj12/IdeaProjects/Backend&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/user/Desktop/0_2025년/2025_2학기/SW플젝4/workspace/MedicineReminder/src/Main.java&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-  },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql_aurora&quot;
-    ]
   }
 }</component>
   <component name="RunManager">
-    <configuration name="Unnamed" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <configuration name="이름이 지정되지 않았습니다" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="medicineReminder.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.medicineReminder.MedicineReminderApplication" />
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -123,15 +127,12 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.27397.103" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26199.169" />
+        <option value="bundled-js-predefined-d6986cc7102b-9c94529fcfe0-JavaScript-IU-252.26199.169" />
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
-  <component name="StructureViewState">
-    <option name="selectedTab" value="Logical" />
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="dab4d769-8918-4d42-8b4e-47e725f1d99e" name="Changes" comment="" />
@@ -139,37 +140,56 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1758960378537</updated>
-      <workItem from="1763896445749" duration="1911000" />
-      <workItem from="1763985705204" duration="7792000" />
-      <workItem from="1763993586967" duration="2121000" />
+      <workItem from="1763898322824" duration="11000" />
+      <workItem from="1763992312968" duration="507000" />
+      <workItem from="1763993551807" duration="296000" />
+      <workItem from="1763993859665" duration="194000" />
+      <workItem from="1763994061789" duration="1163000" />
+      <workItem from="1763996608812" duration="154000" />
+      <workItem from="1763996914376" duration="880000" />
+      <workItem from="1763998189298" duration="3626000" />
     </task>
-    <task id="LOCAL-00001" summary="fix : 로그인 토큰 발급">
+    <task id="LOCAL-00001" summary="journal fix">
       <option name="closed" value="true" />
-      <created>1763886725891</created>
+      <created>1763878477918</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1763886725891</updated>
+      <updated>1763878477918</updated>
     </task>
-    <task id="LOCAL-00002" summary="fix : redirect-uri 변경">
-      <option name="closed" value="true" />
-      <created>1763897710128</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1763897710128</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="fix : 로그인 토큰 발급" />
-    <MESSAGE value="fix : redirect-uri 변경" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix : redirect-uri 변경" />
+    <MESSAGE value="journal fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="journal fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

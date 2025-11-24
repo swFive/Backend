@@ -6,6 +6,7 @@ import com.example.medicineReminder.medication_log.MedicationLogRepository;
 import com.example.medicineReminder.mediinfo.IntakeSchedule; // [추가]
 import com.example.medicineReminder.mediinfo.IntakeScheduleRepository; // [추가]
 import com.example.medicineReminder.repository.UserRepository;
+import com.example.medicineReminder.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,11 +33,10 @@ public class IntakeJournalService {
         this.scheduleRepository = scheduleRepository; // [추가]
     }
 
-    private Long getCurrentUserId() { return 1L; }
 
     @Transactional
     public IntakeJournal createJournal(JournalCreateDto journalDto) {
-        Long currentUserId = getCurrentUserId();
+        Long currentUserId = SecurityUtil.getCurrentUserId();
         AppUsers currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
@@ -78,7 +78,7 @@ public class IntakeJournalService {
      */
     @Transactional(readOnly = true)
     public List<JournalViewDto> getJournalsForUser() {
-        Long currentUserId = getCurrentUserId();
+        Long currentUserId = SecurityUtil.getCurrentUserId(); // 여기!
         List<IntakeJournal> journals = journalRepository.findByUserIdOrderByJournalTimeDesc(currentUserId);
 
         return journals.stream()
@@ -120,7 +120,7 @@ public class IntakeJournalService {
     // === [신규] 일지 수정 로직 ===
     @Transactional
     public IntakeJournal updateJournal(Long journalId, JournalCreateDto updateDto) {
-        Long currentUserId = getCurrentUserId();
+        Long currentUserId = SecurityUtil.getCurrentUserId();
         IntakeJournal journal = journalRepository.findById(journalId)
                 .orElseThrow(() -> new RuntimeException("일지 ID 없음: " + journalId));
 
@@ -141,7 +141,7 @@ public class IntakeJournalService {
     // === [신규] 일지 삭제 로직 ===
     @Transactional
     public void deleteJournal(Long journalId) {
-        Long currentUserId = getCurrentUserId();
+        Long currentUserId = SecurityUtil.getCurrentUserId();
         IntakeJournal journal = journalRepository.findById(journalId)
                 .orElseThrow(() -> new RuntimeException("일지 ID 없음: " + journalId));
 

@@ -4,6 +4,7 @@ import com.example.medicineReminder.domain.entity.AppUsers;
 import com.example.medicineReminder.medication_log.MedicationIntakeLog;
 import com.example.medicineReminder.medication_log.MedicationLogRepository;
 import com.example.medicineReminder.repository.UserRepository;
+import com.example.medicineReminder.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek; // (nextIntakeTime 계산용)
@@ -27,14 +28,10 @@ public class MedicationService {
         this.userRepo = userRepo;
     }
 
-    // (임시) 현재 사용자 ID를 가져오는 메서드
-    private Long getCurrentUserId() {
-        return 1L;
-    }
 
     // 현재 사용자 AppUser 객체를 가져오는 메서드
     private AppUsers getCurrentUser() {
-        Long currentUserId = getCurrentUserId();
+        Long currentUserId = SecurityUtil.getCurrentUserId();
         return userRepo.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("현재 사용자 정보를 찾을 수 없습니다: " + currentUserId));
     }
@@ -83,8 +80,7 @@ public class MedicationService {
     // === [핵심 수정] 2. 약 기본 정보 업데이트 서비스 로직 ===
     @Transactional
     public UserMedication updateMedication(Long medicationId, MedicationUpdateDto updateDto) {
-        Long currentUserId = getCurrentUserId();
-
+        Long currentUserId = SecurityUtil.getCurrentUserId();
         // 1. 약을 찾고 권한 확인
         UserMedication medication = repo.findById(medicationId)
                 .orElseThrow(() -> new RuntimeException("ID에 해당하는 약을 찾을 수 없습니다: " + medicationId));
@@ -107,7 +103,7 @@ public class MedicationService {
     // 3. 기존 약에 새로운 스케줄을 추가하는 메서드
     @Transactional
     public IntakeSchedule addSchedule(Long medicationId, IntakeScheduleDto dto) {
-        Long currentUserId = getCurrentUserId();
+        Long currentUserId = SecurityUtil.getCurrentUserId();
         UserMedication medication = repo.findById(medicationId)
                 .orElseThrow(() -> new RuntimeException("ID에 해당하는 약을 찾을 수 없습니다: " + medicationId));
 
@@ -130,7 +126,7 @@ public class MedicationService {
 
     // 4. 전체 조회(findAllWithLogs) 메서드
     public List<MedicationWithLogsDto> findAllWithLogs() {
-        Long currentUserId = getCurrentUserId();
+        Long currentUserId = SecurityUtil.getCurrentUserId();
         List<UserMedication> medications = repo.findByUserId(currentUserId);
 
         if (medications.isEmpty()) {
@@ -195,7 +191,7 @@ public class MedicationService {
 
     // 5. ID로 찾기(findById) 메서드
     public UserMedication findById(Long id) {
-        Long currentUserId = getCurrentUserId();
+        Long currentUserId = SecurityUtil.getCurrentUserId();
         UserMedication medication = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 약을 찾을 수 없습니다: " + id));
 

@@ -3,6 +3,7 @@ package com.example.medicineReminder.medication_log;
 import com.example.medicineReminder.mediinfo.IntakeSchedule;
 import com.example.medicineReminder.mediinfo.IntakeScheduleRepository;
 import com.example.medicineReminder.mediinfo.UserMedicationRepository; // (필요시)
+import com.example.medicineReminder.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,6 @@ public class MedicationLogService {
         this.scheduleRepository = scheduleRepository;
     }
 
-    private Long getCurrentUserId() { return 1L; }
 
     // === [핵심 수정] 1단계: 단순 복용 기록 생성 메서드 복구 ===
     @Transactional
@@ -35,7 +35,7 @@ public class MedicationLogService {
 
         MedicationIntakeLog newLog = new MedicationIntakeLog();
         newLog.setScheduleId(scheduleId);
-        newLog.setUserId(getCurrentUserId());
+        newLog.setUserId(SecurityUtil.getCurrentUserId()); // 여기!
         newLog.setIntakeStatus(logDto.getIntakeStatus());
 
         // 수동 시간 처리

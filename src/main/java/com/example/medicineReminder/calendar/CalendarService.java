@@ -5,6 +5,7 @@ import com.example.medicineReminder.mediinfo.UserMedication;
 import com.example.medicineReminder.mediinfo.UserMedicationRepository;
 import com.example.medicineReminder.medication_log.MedicationIntakeLog;
 import com.example.medicineReminder.medication_log.MedicationLogRepository;
+import com.example.medicineReminder.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -25,19 +26,13 @@ public class CalendarService {
         this.logRepository = logRepository;
     }
 
-    // (임시) 실제로는 Spring Security 등에서 인증된 사용자 ID를 가져와야 합니다.
-    private Long getCurrentUserId() {
-        // 이 부분은 실제 인증 로직으로 대체되어야 합니다.
-        // (DB 시드 데이터에 user_id = 1이 있으므로 임시로 1L 사용)
-        return 1L;
-    }
+
 
     // === 1. 메서드 시그니처에서 userId 파라미터 제거 ===
     public Map<LocalDate, List<CalendarEventDto>> getMonthlySchedules(int year, int month) {
 
         // === 2. 내부에서 현재 사용자 ID를 직접 가져옴 ===
-        Long currentUserId = getCurrentUserId();
-
+        Long currentUserId = SecurityUtil.getCurrentUserId();
         List<UserMedication> medications = medicationRepository.findByUserId(currentUserId);
         if (medications.isEmpty()) {
             return new HashMap<>();

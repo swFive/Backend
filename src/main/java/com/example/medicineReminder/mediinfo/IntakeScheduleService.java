@@ -1,5 +1,6 @@
 package com.example.medicineReminder.mediinfo;
 
+import com.example.medicineReminder.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,17 +13,11 @@ public class IntakeScheduleService {
         this.scheduleRepository = scheduleRepository;
     }
 
-    // (임시) 실제로는 Spring Security 등에서 인증된 사용자 ID를 가져와야 합니다.
-    private Long getCurrentUserId() {
-        // 이 부분은 실제 인증 로직으로 대체되어야 합니다.
-        // (DB 시드 데이터에 user_id = 1이 있으므로 임시로 1L 사용)
-        return 1L;
-    }
+
 
     @Transactional
     public IntakeSchedule updateSchedule(Long scheduleId, IntakeScheduleDto dto) {
-        Long currentUserId = getCurrentUserId();
-
+        Long currentUserId = SecurityUtil.getCurrentUserId();
         // 1. ID로 스케줄을 찾습니다.
         IntakeSchedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 스케줄을 찾을 수 없습니다: " + scheduleId));
@@ -45,8 +40,7 @@ public class IntakeScheduleService {
 
     @Transactional // 삭제 로직에도 @Transactional 추가 권장
     public void deleteSchedule(Long scheduleId) {
-        Long currentUserId = getCurrentUserId();
-
+        Long currentUserId = SecurityUtil.getCurrentUserId();
         // 1. ID로 스케줄을 찾습니다.
         IntakeSchedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 스케줄을 찾을 수 없습니다: " + scheduleId));
