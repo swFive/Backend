@@ -16,6 +16,16 @@ public class MedicationWithLogsDto {
     @Schema(description = "카테고리")
     private String category;
 
+    // ▼▼▼ [추가된 필드] ▼▼▼
+    @Schema(description = "메모")
+    private String memo;
+
+    @Schema(description = "현재 재고")
+    private Integer currentQuantity;
+
+    @Schema(description = "1회 복용량")
+    private Integer doseUnitQuantity;
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     @Schema(description = "계산된 다음 복용 시간 (예: '다음: 오늘 18:00')")
     private String nextIntakeTime;

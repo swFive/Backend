@@ -157,8 +157,11 @@ public class MedicationService {
             medDto.setName(med.getName());
             medDto.setCategory(med.getCategory());
 
-            // (isPublic 기능은 사용하지 않으므로 DTO에서 제거함. service.java에서도 제거)
-            // medDto.setIsPublic(med.getIsPublic());
+            // ▼▼▼ [추가된 매핑 코드] ▼▼▼
+            medDto.setMemo(med.getMemo());
+            medDto.setCurrentQuantity(med.getCurrentQuantity());
+            medDto.setDoseUnitQuantity(med.getDoseUnitQuantity());
+            // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
             // "다음 복용 시간" 계산
             String nextIntake = calculateNextIntakeTime(med.getSchedules());
