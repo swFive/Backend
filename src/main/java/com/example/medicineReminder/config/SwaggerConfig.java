@@ -50,9 +50,15 @@ public class SwaggerConfig
                 );
 
         return new OpenAPI()
-                .info(info)
-                .addSecurityItem(securityRequirement)
-                .components(components);
+                .info(new Info().title("내 애플리케이션 API").version("v1.0.0"))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .components(new Components()
+                        .addSecuritySchemes("bearerAuth", new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")
+                        )
+                );
 
     }
 }
