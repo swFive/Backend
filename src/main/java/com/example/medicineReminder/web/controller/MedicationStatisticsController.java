@@ -84,4 +84,19 @@ public class MedicationStatisticsController {
                 )
         );
     }
+
+    // 4. [추가] 약물별 미복용 TOP 3 통계 조회
+    // 💡 Frontend (notice.js)에서 호출하는 '/api/v1/statistics/top-missed' 엔드포인트 추가
+    @GetMapping("/top-missed")
+    // 주의: MedicationFailureDto는 프론트엔드에 맞춰 약물명(medicationName)과 실패율(failureRate)을 포함하는 DTO여야 합니다.
+    // 임시로 List로 선언하고, 실제 DTO를 정의 후 교체해주세요.
+    // private class MedicationFailureDto { private String medicationName; private Double failureRate; }
+    public ResponseEntity<List<?>> getTopMissedMedications(
+            @AuthenticationPrincipal Object principal // Object로 변경
+    ) {
+        // 실제 DTO가 정의되면 List<?>를 List<MedicationFailureDto>로 교체합니다.
+        return ResponseEntity.ok(
+                statisticsService.getTopMissedMedications(getUserId(principal))
+        );
+    }
 }

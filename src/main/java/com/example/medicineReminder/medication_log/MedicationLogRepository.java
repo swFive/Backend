@@ -90,7 +90,7 @@ public interface MedicationLogRepository extends JpaRepository<MedicationIntakeL
             @Param("endDateTime") LocalDateTime endDateTime
     );
 
-//TEXT
+    //TEXT
     @Query(value = """
     SELECT
         U.name AS userName,
@@ -122,5 +122,28 @@ public interface MedicationLogRepository extends JpaRepository<MedicationIntakeL
             @Param("endDateTime") LocalDateTime endDateTime
     );
 
-
+    // 3. 🚀 [추가된 메서드] 약물별 미복용 TOP 3 통계 쿼리 (주석 제거 완료)
+    // 결과를 Object[]로 받아 서비스에서 MedicationFailureDto로 직접 매핑합니다.
+    @Query(value = """
+    SELECT
+        M.name AS medicationName, 
+        -- 실패 횟수 (LATE + SKIPPED) / 전체 시도 횟수 * 100.0
+        ROUND(SUM(CASE WHEN L.intake_status IN ('LATE', 'SKIPPED') THEN 1.0 ELSE 0.0 END) * 100.0 / NULLIF(COUNT(L.log_id), 0), 1) AS failureRate
+    FROM
+        MedicationIntakeLogs L
+    -- L.schedule_id를 통해 IntakeSchedules (S)에 접근
+    JOIN
+        IntakeSchedules S ON L.schedule_id = S.schedule_id
+    -- S.medication_id를 통해 UserMedications (M)에 접근하여 약물명 조회
+    JOIN
+        UserMedications M ON S.medication_id = M.medication_id
+    WHERE
+        L.user_id = :userId
+    GROUP BY
+        M.medication_id, M.name 
+    ORDER BY
+        failureRate DESC
+    LIMIT 3
+    """, nativeQuery = true)
+    List<Object[]> findTopMissedMedicationsRaw(@Param("userId") Long userId);
 }
