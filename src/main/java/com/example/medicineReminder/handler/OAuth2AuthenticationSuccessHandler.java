@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -17,6 +18,7 @@ import java.io.IOException;
 
 @Component // Spring Bean으로 등록
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtTokenProvider tokenProvider;
@@ -38,9 +40,11 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         // 1. 인증된 사용자 객체 (PrincipalDetails) 획득
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         Long userId = principal.getUser().getId();
+        log.info("OAuth2 로그인 성공 - 사용자 ID: {}", userId);
 
         // 2. 획득한 사용자 ID 기반으로 JWT 생성
         String jwtToken = tokenProvider.createToken(userId);
+        log.info("JWT 토큰 발급 완료 - 토큰 길이: {}", jwtToken.length());
 
         Cookie jwtCookie = new Cookie("accessToken", jwtToken);
         jwtCookie.setPath("/");       // 모든 경로에서 쿠키 사용

@@ -1,16 +1,13 @@
 package com.example.medicineReminder.jwt;
 
 
-import org.springframework.stereotype.Component;
-
-import java.security.Key;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value; // 🔑 Spring의 @Value로 수정
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,9 +16,10 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List; // 🔑 List import 추가
+import java.util.List;
 
 @Component
+@Slf4j
 public class JwtTokenProvider {
 
     private final Key key;
